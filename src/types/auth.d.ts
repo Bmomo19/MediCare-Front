@@ -1,12 +1,9 @@
-// types/auth.d.ts
-
 // Interface pour les données de l'utilisateur
 export interface User {
   id: string;
   name: string;
   email: string;
   role: 'doctor' | 'admin' | 'staff'; // Exemple de rôles
-  // Ajoutez d'autres champs si nécessaire (ex: specialty, hospitalId)
 }
 
 // Interface pour la réponse de l'API de connexion réussie

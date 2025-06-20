@@ -51,14 +51,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       } else {
         return { success: false, message: data.message };
       }
-    } catch (error : any) { // Utilisez 'any' pour attraper toutes les erreurs possibles ou des types plus spécifiques
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error : any) { 
       console.error("Erreur de connexion:", error);
       return { success: false, message: error.message || "Une erreur est survenue lors de la connexion." };
     } finally {
       setLoading(false);
     }
   }, [router]);
-
+ 
   const logout = useCallback(async () => {
     try {
       setLoading(true);

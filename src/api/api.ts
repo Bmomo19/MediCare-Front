@@ -1,17 +1,15 @@
 import { LoginApiResponse, LoginSuccessResponse, LoginFailureResponse } from '@/types/auth';
 
-// Ceci est un simulateur d'API. En production, vous feriez un appel fetch/axios
-// vers votre véritable backend d'authentification.
 
 export const loginApi = async (identifier: string, password: string): Promise<LoginApiResponse> => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      if (identifier === "medecin@example.com" && password === "password123") {
+      if (identifier === "mhd" && password === "password123") {
         const successResponse: LoginSuccessResponse = {
           success: true,
           user: {
             id: "user-123",
-            name: "Dr. Dupont",
+            name: "Dr. Mhd",
             email: "medecin@example.com",
             role: "doctor",
           },

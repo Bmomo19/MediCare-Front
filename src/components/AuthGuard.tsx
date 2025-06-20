@@ -1,4 +1,3 @@
-// components/AuthGuard.tsx
 'use client';
 
 import { useEffect, ReactNode } from 'react';
@@ -29,6 +28,7 @@ const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
     } else if (isAuthenticated && publicPaths.includes(pathname)) {
       router.push('/dashboard');
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated, loading, pathname, router]);
 
 
