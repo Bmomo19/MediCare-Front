@@ -12,6 +12,7 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+  
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -22,6 +23,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   useEffect(() => {
     const storedToken = localStorage.getItem('authToken');
     const storedUser = localStorage.getItem('authUser');
+
     if (storedToken && storedUser) {
       try {
         const parsedUser: User = JSON.parse(storedUser);
