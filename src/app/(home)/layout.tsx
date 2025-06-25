@@ -1,4 +1,5 @@
-import { Header } from '@/components/layout/header'
+
+import { Header } from '@/components/layout/header/Header'
 import { Sidebar } from '@/components/layout/sidebar/Sidebar'
 import React from 'react'
 

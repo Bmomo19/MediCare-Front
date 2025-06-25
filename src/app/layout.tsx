@@ -6,6 +6,9 @@ import { Providers } from "./providers";
 
 export const metadata: Metadata = {
   title: "MediCare",
+  icons: {
+    icon: "/favicon.ico",
+  },
   description: "Système de gestion médicale moderne",
 };
 

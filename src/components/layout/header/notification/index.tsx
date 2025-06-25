@@ -5,12 +5,12 @@ import {
   DropdownContent,
   DropdownTrigger,
 } from "@/components/ui/dropdown";
-import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { BellIcon } from "./icons";
+import { useMobile } from "@/hooks/useMobile";
 
 const notificationList = [
   {
@@ -43,17 +43,13 @@ const notificationList = [
 export function Notification() {
   const [isOpen, setIsOpen] = useState(false);
   const [isDotVisible, setIsDotVisible] = useState(true);
-  const isMobile = useIsMobile();
+  const isMobile = useMobile();
 
   return (
-    <Dropdown
-      isOpen={isOpen}
-      setIsOpen={(open) => {
-        setIsOpen(open);
-
-        if (setIsDotVisible) setIsDotVisible(false);
-      }}
-    >
+    <Dropdown isOpen={isOpen} setIsOpen={(open) => {
+      setIsOpen(open);
+      if (setIsDotVisible) setIsDotVisible(false);
+    }}>
       <DropdownTrigger
         className="grid size-12 place-items-center rounded-full border bg-gray-2 text-dark outline-none hover:text-primary focus-visible:border-primary focus-visible:text-primary dark:border-dark-4 dark:bg-dark-3 dark:text-white dark:focus-visible:border-primary"
         aria-label="View Notifications"

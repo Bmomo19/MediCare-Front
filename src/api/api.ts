@@ -4,7 +4,7 @@ import { LoginApiResponse, LoginSuccessResponse, LoginFailureResponse } from '@/
 export const loginApi = async (identifier: string, password: string): Promise<LoginApiResponse> => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      if (identifier === "mhd" && password === "password123") {
+      if (identifier === "mhd" && password === "12345") {
         const successResponse: LoginSuccessResponse = {
           success: true,
           user: {
