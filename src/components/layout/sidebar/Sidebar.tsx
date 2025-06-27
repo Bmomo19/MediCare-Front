@@ -1,149 +1,247 @@
-"use client";
+'use client'; // Indique que ce composant est un Client Component
 
-import { cn } from "@/lib/utils";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useSidebarContext } from "../../../contexts/SidebarContext";
-import { NAV_DATA } from "./menu/data";
-import { MenuItem } from "./menu/menuItem";
-import { ArrowLeftIcon, ChevronUp } from "./menu/icons.menu";
-import Image from "next/image";
+import React from 'react';
+import SidebarDropdown from './SidebarDropdown'; // Importe le composant dropdown
 
-export function Sidebar() {
-    const pathname = usePathname();
-    const { setIsOpen, isOpen, isMobile, toggleSidebar } = useSidebarContext();
-    const [expandedItems, setExpandedItems] = useState<string[]>([]);
-
-    const toggleExpanded = (title: string) => {
-        setExpandedItems((prev) => (prev.includes(title) ? [] : [title]));
-
-        // Uncomment the following line to enable multiple expanded items
-        setExpandedItems((prev) =>
-            prev.includes(title) ? prev.filter((t) => t !== title) : [...prev, title],
-        );
-    };
-
-    useEffect(() => {
-        // Keep collapsible open, when it's subpage is active
-        NAV_DATA.some((section) => {
-            return section.items.some((item) => {
-                return item.items.some((subItem) => {
-                    if (subItem.url === pathname) {
-                        if (!expandedItems.includes(item.title)) {
-                            toggleExpanded(item.title);
-                        }
-
-                        // Break the loop
-                        return true;
-                    }
-                });
-            });
-        });
-    }, [expandedItems, pathname]);
-
-    return (
-        <>
-            {/* Mobile Overlay */}
-            {isMobile && isOpen && (
-                <div className="fixed inset-0 z-40 bg-black/50 transition-opacity duration-300" onClick={() => setIsOpen(false)} aria-hidden="true" />
-            )}
-
-            <aside
-                className={cn(
-                    "max-w-[290px] overflow-hidden border-r border-gray-200 bg-white transition-[width] duration-200 ease-linear dark:border-gray-800 dark:bg-gray-dark",
-                    isMobile ? "fixed bottom-0 top-0 z-50" : "sticky top-0 h-screen",
-                    isOpen ? "w-full" : "w-0",
-                )}
-                aria-label="Main navigation"
-                aria-hidden={!isOpen}
-                inert={!isOpen}
-            >
-                <div className="flex h-full flex-col py-10 pl-[25px] pr-[7px]">
-                    <div className="w-full justify-center items-center">
-                        <Link href={"/"} onClick={() => isMobile && toggleSidebar()} className="px-0 py-2.5 min-[850px]:py-0">
-                            <Image src="/assets/logo 2.png" alt="Logo" width={110} height={110} quality={100} className="ml-auto mr-auto" />
-                        </Link>
-
-                        {isMobile && (
-                            <button onClick={toggleSidebar} className="absolute left-3/4 right-4.5 top-1/2 -translate-y-1/2 text-right">
-                                <span className="sr-only">Close Menu</span>
-                                <ArrowLeftIcon className="ml-auto size-7" />
-                            </button>
-                        )}
-                    </div>
-
-                    {/* Navigation */}
-                    <div className="custom-scrollbar mt-0 flex-1 overflow-y-auto pr-3 min-[850px]:mt-10">
-                        {NAV_DATA.map((section) => (
-                            <div key={section.label} className="mb-6">
-                                <h2 className="mb-5 text-sm font-medium text-dark-4 dark:text-dark-6">
-                                    {section.label}
-                                </h2>
-
-                                <nav role="navigation" aria-label={section.label}>
-                                    <ul className="space-y-2">
-                                        {section.items.map((item) => (
-                                            <li key={item.title}>
-                                                {item.items.length ? (
-                                                    <div>
-                                                        <MenuItem
-                                                            isActive={item.items.some(
-                                                                ({ url }) => url === pathname,
-                                                            )}
-                                                            onClick={() => toggleExpanded(item.title)}
-                                                        >
-                                                            <item.icon className="size-6 shrink-0" aria-hidden="true" />
-
-                                                            <span>{item.title}</span>
-
-                                                            <ChevronUp
-                                                                className={cn(
-                                                                    "ml-auto rotate-180 transition-transform duration-200",
-                                                                    expandedItems.includes(item.title) &&
-                                                                    "rotate-0",
-                                                                )}
-                                                                aria-hidden="true"
-                                                            />
-                                                        </MenuItem>
-
-                                                        {expandedItems.includes(item.title) && (
-                                                            <ul className="ml-9 mr-0 space-y-1.5 pb-[15px] pr-0 pt-2" role="menu">
-                                                                {item.items.map((subItem) => (
-                                                                    <li key={subItem.title} role="none">
-                                                                        <MenuItem as="link" href={subItem.url} isActive={pathname === subItem.url}>
-                                                                            <span>{subItem.title}</span>
-                                                                        </MenuItem>
-                                                                    </li>
-                                                                ))}
-                                                            </ul>
-                                                        )}
-                                                    </div>
-                                                ) : (
-                                                    (() => {
-                                                        const href =
-                                                            "url" in item
-                                                                ? item.url + ""
-                                                                : "/" +
-                                                                item.title.toLowerCase().split(" ").join("-");
-
-                                                        return (
-                                                            <MenuItem className="flex items-center gap-3 py-3" as="link" href={href} isActive={pathname === href}>
-                                                                <item.icon className="size-6 shrink-0" aria-hidden="true" />
-                                                                <span>{item.title}</span>
-                                                            </MenuItem>
-                                                        );
-                                                    })()
-                                                )}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </nav>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </aside>
-        </>
-    );
+interface SidebarProps {
+  children?: React.ReactNode; // Pour le contenu principal de la page
 }
+
+const Sidebar: React.FC<SidebarProps> = ({ children }) => {
+  return (
+    <div className="flex h-screen bg-gray-100 font-inter"> {/* Assurez-vous que 'font-inter' est défini via Tailwind */}
+      {/* Sidebar */}
+      <aside className="w-64 bg-gray-900 text-white flex flex-col rounded-r-lg shadow-lg"> {/* Ajout de rounded-r-lg et shadow-lg pour le style */}
+        <div className="p-4 border-b border-gray-800">
+          <div className="flex items-center justify-between">
+            <img src="https://tailwindflex.com/images/logo.svg" alt="Logo" className="h-8 w-auto rounded-md" /> {/* Ajout de rounded-md */}
+            <span className="text-xl font-bold">Admin Pro</span>
+          </div>
+        </div>
+        {/* Search Bar */}
+        <div className="p-4">
+          <div className="relative">
+            <input
+              type="text"
+              className="w-full bg-gray-800 text-white rounded-md pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              placeholder="Search..."
+            />
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg
+                className="h-5 w-5 text-gray-500"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <nav className="mt-5 px-2 flex-grow"> {/* flex-grow pour que le nav prenne l'espace disponible */}
+          {/* Main Navigation */}
+          <div className="space-y-4">
+            {/* Dashboard */}
+            <a
+              href="#"
+              className="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg bg-gray-800 text-white group transition-all duration-200 hover:bg-gray-700"
+            >
+              <svg
+                className="h-5 w-5 mr-3"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                />
+              </svg>
+              Dashboard
+            </a>
+
+            {/* Analytics Dropdown */}
+            <SidebarDropdown
+              title="Analytics"
+              icon={
+                <svg
+                  className="h-5 w-5 mr-3"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                  />
+                </svg>
+              }
+              defaultOpen={true} // Garde Analytics ouvert par défaut si souhaité
+            >
+              <a
+                href="#"
+                className="group flex items-center px-4 py-2 text-sm text-gray-300 rounded-md hover:bg-gray-700 hover:text-white"
+              >
+                Overview
+              </a>
+              <a
+                href="#"
+                className="group flex items-center px-4 py-2 text-sm text-gray-300 rounded-md hover:bg-gray-700 hover:text-white"
+              >
+                Reports
+              </a>
+              <a
+                href="#"
+                className="group flex items-center px-4 py-2 text-sm text-gray-300 rounded-md hover:bg-gray-700 hover:text-white"
+              >
+                Statistics
+              </a>
+            </SidebarDropdown>
+
+            {/* Team Dropdown */}
+            <SidebarDropdown
+              title="Team"
+              icon={
+                <svg
+                  className="h-5 w-5 mr-3"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+                  />
+                </svg>
+              }
+            >
+              <a
+                href="#"
+                className="group flex items-center px-4 py-2 text-sm text-gray-300 rounded-md hover:bg-gray-700 hover:text-white"
+              >
+                Members
+              </a>
+              <a
+                href="#"
+                className="group flex items-center px-4 py-2 text-sm text-gray-300 rounded-md hover:bg-gray-700 hover:text-white"
+              >
+                Calendar
+              </a>
+              <a
+                href="#"
+                className="group flex items-center px-4 py-2 text-sm text-gray-300 rounded-md hover:bg-gray-700 hover:text-white"
+              >
+                Settings
+              </a>
+            </SidebarDropdown>
+
+            {/* Projects */}
+            <a
+              href="#"
+              className="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white group transition-all duration-200"
+            >
+              <svg
+                className="h-5 w-5 mr-3"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"
+                />
+              </svg>
+              Projects
+            </a>
+
+            {/* Calendar */}
+            <a
+              href="#"
+              className="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white group transition-all duration-200"
+            >
+              <svg
+                className="h-5 w-5 mr-3"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
+              </svg>
+              Calendar
+            </a>
+
+            {/* Documents */}
+            <a
+              href="#"
+              className="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white group transition-all duration-200"
+            >
+              <svg
+                className="h-5 w-5 mr-3"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
+              </svg>
+              Documents
+            </a>
+          </div>
+        </nav>
+
+        {/* User Profile */}
+        <div className="mt-auto p-4 border-t border-gray-800">
+          <div className="flex items-center">
+            <img
+              className="h-8 w-8 rounded-full"
+              src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+              alt="User profile"
+            />
+            <div className="ml-3">
+              <p className="text-sm font-medium text-white">Tom Cook</p>
+              <p className="text-xs text-gray-400">View profile</p>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      {/* Main Content */}
+      <main className="flex-1 p-6 bg-gray-100 overflow-auto"> {/* Ajout de overflow-auto */}
+        <h1 className="text-2xl font-semibold text-gray-900">Dashboard</h1>
+        <div className="mt-4 p-6 bg-white rounded-lg shadow-md">
+          <p className="text-gray-600">This is a dark sidebar example with submenus.</p>
+          {children} {/* Pour rendre le contenu dynamique de la page */}
+        </div>
+      </main>
+    </div>
+  );
+};
+
+export default Sidebar;

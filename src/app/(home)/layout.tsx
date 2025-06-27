@@ -1,6 +1,6 @@
 
 import { Header } from '@/components/layout/header/Header'
-import { Sidebar } from '@/components/layout/sidebar/Sidebar'
+import Sidebar from '@/components/layout/sidebar/Sidebar'
 import React from 'react'
 
 type Props = {
