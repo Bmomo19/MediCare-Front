@@ -6,15 +6,12 @@ import { Providers } from "./providers";
 
 export const metadata: Metadata = {
   title: "MediCare",
-  icons: {
-    icon: "/favicon.ico",
-  },
   description: "Système de gestion médicale moderne",
 };
 
 export default function RootLayout({ children, }: Readonly<{ children: React.ReactNode; }>) {
   return (
-    <html lang="fr" suppressHydrationWarning>
+    <html lang="fr">
       <body className={`${roboto.className}`}>
         <Providers>{children}</Providers>
       </body>
