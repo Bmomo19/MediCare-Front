@@ -1,46 +1,49 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { MenuIcon } from "./icons";
 import { useSidebarContext } from "@/contexts/SidebarContext";
 
 export function Header() {
-  const { toggleSidebar, isMobile } = useSidebarContext();
+  const { toggleSidebar } = useSidebarContext();
 
   return (
-    <header className="sticky top-0 z-30 flex items-center justify-between border-b border-stroke bg-white px-4 py-5 shadow-1 dark:border-stroke-dark dark:bg-gray-dark md:px-5 2xl:px-10">
-      <button
-        onClick={toggleSidebar}
-        className="rounded-lg border px-1.5 py-1 dark:border-stroke-dark dark:bg-[#020D1A] hover:dark:bg-[#FFFFFF1A] lg:hidden"
-      >
+    <header className="bg-white shadow-md p-4 flex justify-end items-center rounded-b-lg">
+      {/* <Link href="/dashboard" className="text-2xl font-bold text-gray-800 hover:text-indigo-600 transition-colors">
+        MediCare
+      </Link> */}
+
+      {/* Liens de navigation */}
+      <nav>
+        <ul className="flex space-x-6">
+          <li>
+            <Link href="/profile" className="text-gray-700 hover:text-indigo-600 font-medium transition-colors">
+              Profil
+            </Link>
+          </li>
+          <li>
+            <button
+              onClick={()=> {}}
+              className="text-red-600 hover:text-red-800 font-medium transition-colors focus:outline-none"
+            >
+              Déconnexion
+            </button>
+          </li>
+        </ul>
+      </nav>
+      {/* <button onClick={toggleSidebar} className="rounded-lg px-1.5 py-1 dark:border-stroke-dark lg:hidden">
         <MenuIcon />
         <span className="sr-only">Toggle Sidebar</span>
-      </button>
-
-      {isMobile && (
-        <Link href={"/"} className="ml-2 max-[430px]:hidden min-[375px]:ml-4">
-          <Image
-            src={"/images/logo/logo-icon.svg"}
-            width={32}
-            height={32}
-            alt=""
-            role="presentation"
-          />
-        </Link>
-      )}
-
-      <div className="max-xl:hidden">
+      </button>    
         <h1 className="mb-0.5 text-heading-5 font-bold text-dark dark:text-white">
           Dashboard
         </h1>
         <p className="font-medium">Next.js Admin Dashboard Solution</p>
-      </div>
 
       <div className="flex flex-1 items-center justify-end gap-2 min-[375px]:gap-4">
         <div className="shrink-0">
         </div>
-      </div>
+      </div> */}
     </header>
   );
 }

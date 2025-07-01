@@ -22,7 +22,7 @@ const DashboardPage = () => {
 
   return (
     <>
-      <Head>
+      {/* <Head>
         <title>Tableau de bord - MediCare</title>
         <meta name="description" content="Tableau de bord de votre système de gestion médicale." />
       </Head>
@@ -41,7 +41,6 @@ const DashboardPage = () => {
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Exemples de cartes de fonctionnalités */}
             <div className="bg-blue-50 p-6 rounded-lg shadow-md hover:shadow-lg transition">
               <h3 className="text-xl font-bold text-blue-800 mb-2">Gestion des Patients</h3>
               <p className="text-blue-700">Accédez aux dossiers des patients, historiques et rendez-vous.</p>
@@ -63,7 +62,7 @@ const DashboardPage = () => {
             Se déconnecter
           </button>
         </div>
-      </div>
+      </div> */}
     </>
   );
 };
