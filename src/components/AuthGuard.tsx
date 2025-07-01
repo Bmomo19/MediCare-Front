@@ -9,32 +9,39 @@ interface AuthGuardProps {
 }
 
 const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
-  const { isAuthenticated, loading } = useAuth(); // `loading` from context indicates initial check
+  const { isAuthenticated, loading } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
 
-  const publicPaths = ['/login'];
+  // Définissez les chemins publics qui ne nécessitent PAS d'authentification
+  const publicPaths = ['/login', '/register', '/forgot-password']; // Ajoutez ici toutes vos pages publiques
 
   useEffect(() => {
-    // If we are still determining auth state (initial client load)
-    // or if we are on a public path, don't redirect yet.
+    // Si l'état de chargement est toujours en cours, ne faites rien pour l'instant
     if (loading) {
       return;
     }
 
-    // After loading, apply redirection logic
+    // CAS 1 : Utilisateur NON authentifié
+    // Si l'utilisateur n'est PAS authentifié ET qu'il tente d'accéder à un chemin PROTÉGÉ,
+    // redirigez-le vers la page de connexion.
     if (!isAuthenticated && !publicPaths.includes(pathname)) {
       router.push('/login');
-    } else if (isAuthenticated && publicPaths.includes(pathname)) {
+      return;
+    }
+
+    // CAS 2 : Utilisateur AUTHENTIFIÉ
+    // Si l'utilisateur EST authentifié ET qu'il tente d'accéder à un chemin PUBLIC (ex: /login),
+    // redirigez-le vers le tableau de bord.
+    if (isAuthenticated && publicPaths.includes(pathname)) {
       router.push('/dashboard');
+      return;
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated, loading, pathname, router]);
 
-
-  // IMPORTANT: Only render children AFTER loading is complete AND if we are authenticated
-  // Or, if we are on a public path (like login), always render its children
-  // This prevents rendering content that might mismatch before localStorage is read.
+  // Affichez un état de chargement pendant que le statut d'authentification est déterminé.
+  // Ceci assure une cohérence entre le rendu serveur et client.
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -43,19 +50,10 @@ const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
     );
   }
 
-  // If we are on a public path, always render its children (login page content)
-  if (publicPaths.includes(pathname)) {
-      return <>{children}</>;
-  }
-
-  // If not loading, and on a protected path, and authenticated, render children
-  if (isAuthenticated) {
-      return <>{children}</>;
-  }
-
-  // If not loading, not authenticated, and on a protected path (should be redirected by useEffect),
-  // we can render null or a small loader as the redirect is happening.
-  return null;
+  // Si l'utilisateur est authentifié OU sur un chemin public,
+  // nous rendons les enfants. Le layout spécifique au groupe (home)
+  // ou la page de login se chargera ensuite de son propre rendu.
+  return <>{children}</>;
 };
 
 export default AuthGuard;

@@ -1,36 +1,23 @@
+'use client'; // Ce layout doit être un Client Component
 
-import { Header } from '@/components/layout/header/Header'
-import Sidebar from '@/components/layout/sidebar/Sidebar'
-import React from 'react'
+import React from 'react';
+import { useSidebarContext } from '@/contexts/SidebarContext'; // Importe le contexte de la sidebar
+import Header from '@/components/layout/header/Header';
+import Sidebar from '@/components/layout/sidebar/Sidebar';
 
-type Props = {
-  children: React.ReactNode
-}
+// Ce layout s'appliquera à toutes les routes sous le groupe (home)
+export default function HomeGroupLayout({children,}: Readonly<{children: React.ReactNode;}>) {
+  const { isMobile } = useSidebarContext();
 
-function Layout({ children }: Props) {
   return (
-    <>
-      <div className="flex flex-col h-screen"> {/* Conteneur principal pour le layout */}
-        <Header /> {/* Le Header est maintenant à l'intérieur de AuthGuard */}
-        <div className="flex-grow flex"> {/* Conteneur pour la Sidebar et le contenu principal */}
-          <Sidebar> {/* La Sidebar enveloppe le contenu spécifique de la page */}
-            {children} {/* Les pages rendues par Next.js */}
-          </Sidebar>
-        </div>
+    <div className="flex flex-col h-screen">
+      <Header />
+      <div className="flex flex-1 overflow-hidden">
+        <Sidebar/>
+        <main className={`flex-1 p-6 bg-gray-100 overflow-y-auto transition-all duration-300 ease-in-out ${!isMobile ? 'ml-64' : 'ml-0'} /* Si desktop, ml-64. Si mobile, ml-0. */`}>
+          {children} 
+        </main>
       </div>
-      {/* <div className="flex min-h-screen">
-        <Sidebar />
-
-        <div className="w-full bg-gray-100">
-          <Header />
-
-          <main className="isolate mx-auto w-full max-w-screen-2xl overflow-hidden p-4 md:p-6 2xl:p-10">
-            {children}
-          </main>
-        </div>
-      </div> */}
-    </>
-  )
+    </div>
+  );
 }
-
-export default Layout

@@ -1,62 +1,81 @@
 'use client';
 
-import { useMobile } from "@/hooks/useMobile";
-import { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 type SidebarState = "expanded" | "collapsed";
 
-type SidebarContextType = {
+interface SidebarContextType {
   state: SidebarState;
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
-  isMobile: boolean; // Indique si l'appareil est mobile
-  isHydrated: boolean; // Nouveau: indique si l'hydratation côté client est terminée
+  isMobile: boolean; // Indique si l'appareil est mobile (déterminé côté client)
+  isHydrated: boolean; // Indique si l'hydratation côté client est terminée
   toggleSidebar: () => void;
-};
+}
 
 const SidebarContext = createContext<SidebarContextType | null>(null);
 
-export function SidebarProvider({children, defaultOpen = true,}: { children: React.ReactNode; defaultOpen?: boolean;}) {
-  // `isMobile` du hook useMobile. Cette valeur sera `false` pendant le SSR,
-  // et sa vraie valeur (true/false) après exécution de son useEffect sur le client.
-  const isMobile = useMobile();
+interface SidebarProviderProps {
+  children: ReactNode;
+  defaultOpen?: boolean;
+}
 
-  // État pour `isOpen`. Initialisé avec `defaultOpen` pour la cohérence SSR.
-  // Le serveur et la première passe client rendront `isOpen` comme `defaultOpen`.
+export function SidebarProvider({ children, defaultOpen = true }: SidebarProviderProps) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
-
-  // Nouvel état pour suivre si l'hydratation côté client est terminée.
+  const [isMobile, setIsMobile] = useState(false); // Initialisé à false pour SSR
   const [isHydrated, setIsHydrated] = useState(false);
 
-  // Effet pour marquer que le composant est hydraté. S'exécute une seule fois côté client.
+  // Détermine si l'appareil est mobile après l'hydratation
   useEffect(() => {
-    setIsHydrated(true);
+    setIsHydrated(true); // Marque l'hydratation comme terminée
+    const checkMobile = () => {
+      // Utilisation de `window.innerWidth` pour la détection mobile
+      // Ajustez la valeur (par exemple 768px pour `md` breakpoint de Tailwind)
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    // Exécute la vérification initiale
+    checkMobile();
+    // Ajoute un écouteur d'événement pour les changements de taille de fenêtre
+    window.addEventListener('resize', checkMobile);
+
+    // Nettoyage de l'écouteur d'événement
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Effet pour ajuster l'état de la barre latérale en fonction de `isMobile` et `defaultOpen`.
-  // Cet effet ne s'exécute QUE si `isHydrated` est vrai, c'est-à-dire après l'hydratation.
+  // Ajuste l'état d'ouverture de la sidebar en fonction de `isMobile` et `defaultOpen`
+  // S'exécute uniquement après l'hydratation (`isHydrated`)
   useEffect(() => {
-    if (isHydrated) { // S'assurer que nous sommes sur le client et que l'hydratation est faite
+    if (isHydrated) {
       if (isMobile) {
-        setIsOpen(false); // Par défaut fermée sur mobile
+        setIsOpen(false); // Fermée par défaut sur mobile
       } else {
-        setIsOpen(defaultOpen); // Par défaut `defaultOpen` sur desktop (souvent ouverte)
+        setIsOpen(defaultOpen); // Ouverte par défaut sur desktop
       }
     }
-  }, [isMobile, defaultOpen, isHydrated]); // `isHydrated` doit être une dépendance
+  }, [isMobile, defaultOpen, isHydrated]);
 
-  function toggleSidebar() {
+  const toggleSidebar = () => {
     setIsOpen((prev) => !prev);
-  }
+  };
+
+  const authContextValue: SidebarContextType = {
+    state: isOpen ? "expanded" : "collapsed",
+    isOpen,
+    setIsOpen,
+    isMobile,
+    isHydrated,
+    toggleSidebar,
+  };
 
   return (
-    <SidebarContext.Provider value={{ state: isOpen ? "expanded" : "collapsed", isOpen, setIsOpen, isMobile, isHydrated, toggleSidebar,}}>
+    <SidebarContext.Provider value={authContextValue}>
       {children}
     </SidebarContext.Provider>
   );
 }
 
-export function useSidebarContext() {
+export function useSidebarContext(): SidebarContextType {
   const context = useContext(SidebarContext);
   if (context === null) {
     throw new Error("useSidebarContext must be used within a SidebarProvider");

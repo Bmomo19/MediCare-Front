@@ -1,15 +1,9 @@
-// app/page.tsx
-'use client'; // Indique que c'est un Client Component
+'use client'; 
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../contexts/AuthContext'; // Ajustez le chemin si nécessaire
 
-// Métadonnées spécifiques à la page pour le SEO
-// export const metadata = {
-//   title: 'Accueil - MediCare',
-//   description: 'Page d\'accueil du système de gestion médicale MediCare.',
-// };
 
 const HomePage: React.FC = () => {
   const { isAuthenticated, loading } = useAuth();
