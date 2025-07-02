@@ -19,20 +19,20 @@ export interface NavGroup {
 // Données de navigation
 export const NAV_DATA: (NavItem | NavGroup)[] = [
   {
-    title: "Tableau de bord",
+    title: "Dashboard",
     icon: Icons.DashboardIcon,
     defaultOpen: true,
     items: [
       {
-        title: "Admin",
+        title: "Admin dashboard",
         url: URL.APPLINKS.DASHBOARD_ADMIN,
       },
       {
-        title: "Docteur",
+        title: "Docteur dashboard",
         url: URL.APPLINKS.DASHBOARD_DOCTOR,
       },
       {
-        title: "Patient",
+        title: "Patient dashboard",
         url: URL.APPLINKS.DAHSBOARD_PATIENT,
       },
     ],
