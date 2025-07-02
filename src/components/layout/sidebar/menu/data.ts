@@ -1,105 +1,53 @@
-import * as Icons from "./icons.menu";
+import * as Icons from "./icons.menu"; 
+import * as URL from "@/lib/constant"; 
 
-export const NAV_DATA = [
+
+export interface NavItem {
+  title: string;
+  url: string;
+  icon?: React.FC<Icons.IconProps>; 
+}
+
+export interface NavGroup {
+  title: string;
+  icon: React.FC<Icons.IconProps>;
+  url?: string;
+  items: NavItem[];
+  defaultOpen?: boolean;
+}
+
+// Données de navigation
+export const NAV_DATA: (NavItem | NavGroup)[] = [
   {
-    label: "MAIN MENU",
+    title: "Tableau de bord",
+    icon: Icons.DashboardIcon,
+    defaultOpen: true,
     items: [
       {
-        title: "Dashboard",
-        icon: Icons.HomeIcon,
-        items: [
-          {
-            title: "eCommerce",
-            url: "/",
-          },
-        ],
+        title: "Admin",
+        url: URL.APPLINKS.DASHBOARD_ADMIN,
       },
       {
-        title: "Calendar",
-        url: "/calendar",
-        icon: Icons.Calendar,
-        items: [],
+        title: "Docteur",
+        url: URL.APPLINKS.DASHBOARD_DOCTOR,
       },
       {
-        title: "Profile",
-        url: "/profile",
-        icon: Icons.User,
-        items: [],
-      },
-      {
-        title: "Forms",
-        icon: Icons.Alphabet,
-        items: [
-          {
-            title: "Form Elements",
-            url: "/forms/form-elements",
-          },
-          {
-            title: "Form Layout",
-            url: "/forms/form-layout",
-          },
-        ],
-      },
-      {
-        title: "Tables",
-        url: "/tables",
-        icon: Icons.Table,
-        items: [
-          {
-            title: "Tables",
-            url: "/tables",
-          },
-        ],
-      },
-      {
-        title: "Pages",
-        icon: Icons.Alphabet,
-        items: [
-          {
-            title: "Settings",
-            url: "/pages/settings",
-          },
-        ],
+        title: "Patient",
+        url: URL.APPLINKS.DAHSBOARD_PATIENT,
       },
     ],
   },
   {
-    label: "OTHERS",
-    items: [
-      {
-        title: "Charts",
-        icon: Icons.PieChart,
-        items: [
-          {
-            title: "Basic Chart",
-            url: "/charts/basic-chart",
-          },
-        ],
-      },
-      {
-        title: "UI Elements",
-        icon: Icons.FourCircle,
-        items: [
-          {
-            title: "Alerts",
-            url: "/ui-elements/alerts",
-          },
-          {
-            title: "Buttons",
-            url: "/ui-elements/buttons",
-          },
-        ],
-      },
-      {
-        title: "Authentication",
-        icon: Icons.Authentication,
-        items: [
-          {
-            title: "Sign In",
-            url: "/auth/sign-in",
-          },
-        ],
-      },
-    ],
+    title: "Docteurs",
+    url: URL.APPLINKS.DOCTOR,
+    icon: Icons.UsersIcon,
+    items: [],
   },
+  {
+    title: "Patients",
+    url: URL.APPLINKS.PATIENT,
+    icon: Icons.ProfileIcon,
+    items: [],
+  },
+  // Ajoutez d'autres éléments de navigation ici si nécessaire
 ];

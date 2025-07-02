@@ -46,6 +46,19 @@ export function UsersIcon(props: IconProps) {
   );
 }
 
+export function UserIcon(props: IconProps) {
+  return (
+    <svg width="120px" height="120px" viewBox="-2.4 -2.4 20.80 20.80" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#000000" strokeWidth="0.00016" {...props}>
+      <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+      <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
+      <g id="SVGRepo_iconCarrier">
+        <path d="M8 7C9.65685 7 11 5.65685 11 4C11 2.34315 9.65685 1 8 1C6.34315 1 5 2.34315 5 4C5 5.65685 6.34315 7 8 7Z" fill="#000000"></path>
+        <path d="M14 12C14 10.3431 12.6569 9 11 9H5C3.34315 9 2 10.3431 2 12V15H14V12Z" fill="#000000"></path>
+      </g>
+    </svg>
+  );
+}
+
 // Icône de projets (Folder)
 export function ProjectsIcon(props: IconProps) {
   return (
@@ -127,7 +140,7 @@ export function ProfileIcon(props: IconProps) {
 export function ChevronDownIcon(props: IconProps) {
   return (
     <svg width={20} height={20} viewBox="0 0 20 20" fill="currentColor" {...props}>
-      <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd"/>
+      <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
     </svg>
   );
 }
@@ -136,7 +149,7 @@ export function ChevronDownIcon(props: IconProps) {
 export function MenuIcon(props: IconProps) {
   return (
     <svg width={24} height={24} viewBox="0 0 24 24" fill="none" {...props}>
-      <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"/>
+      <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
     </svg>
   );
 }
@@ -145,7 +158,7 @@ export function MenuIcon(props: IconProps) {
 export function CloseIcon(props: IconProps) {
   return (
     <svg width={24} height={24} viewBox="0 0 24 24" fill="none" {...props}>
-      <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"/>
+      <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
     </svg>
   );
 }

@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children, }: Readonly<{ children: React.ReactNode; }>) {
   return (
-    <html lang="fr" className={`${roboto.className}`}>
+    <html lang="fr" className={`${roboto.className}`} suppressHydrationWarning>
       <body className="font-roboto bg-gray-100">
         <Providers>{children}</Providers>
       </body>
