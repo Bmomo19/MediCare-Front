@@ -5,4 +5,6 @@ export const APPLINKS = {
     DAHSBOARD_PATIENT: "/dashboard/patient",
     DOCTOR: "/doctors",
     PATIENT: "/patients",
+    RDV: "/appointment",
+    LOGIN: "/login"
 }
