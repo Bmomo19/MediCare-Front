@@ -8,3 +8,13 @@ export const APPLINKS = {
     RDV: "/appointment",
     LOGIN: "/login"
 }
+
+export const BASE_ENDPOINTS = '/api';
+
+
+export const ENDPOINTS = {
+    CSRF : '/sanctum/csrf-cookie', 
+    LOGIN : '/v1/auth/login',
+    LOGOUT : '/v1/auth/logout'
+
+}
