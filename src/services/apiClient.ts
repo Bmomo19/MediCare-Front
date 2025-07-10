@@ -54,48 +54,41 @@ apiClient.interceptors.response.use(
     const originalRequest = error.config;
 
     // Si l'erreur est 401 et que ce n'est pas la requête de rafraîchissement elle-même
-    // et que nous n'avons pas déjà marqué la requête comme "retryée"
+    // et qu'il n'y a pas déjà marqué la requête comme "retryée"
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true; // Marque la requête comme étant retryée
 
-      // Si une requête de rafraîchissement est déjà en cours, mettez la requête actuelle en file d'attente
+     
       if (isRefreshing) {
-        return new Promise(function(resolve, reject) {
+        return new Promise(function (resolve, reject) {
           failedQueue.push({ resolve, reject });
         })
-        .then(() => {
-          // Si le rafraîchissement a réussi, relancer la requête originale
-          return apiClient(originalRequest);
-        })
-        .catch(err => {
-          return Promise.reject(err);
-        });
+          .then(() => {
+            // Si le rafraîchissement a réussi, relancer la requête originale
+            return apiClient(originalRequest);
+          })
+          .catch(err => {
+            return Promise.reject(err);
+          });
       }
 
-      isRefreshing = true; // Marque le début du processus de rafraîchissement
+      isRefreshing = true;
 
       try {
-        // Tente de rafraîchir la session Laravel via l'endpoint CSRF cookie
-        // C'est la méthode standard pour Sanctum SPA pour "rafraîchir" la session.
-        // Si cette requête réussit, de nouveaux cookies de session seront définis.
         await axios.get(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'}/sanctum/csrf-cookie`, {
-          withCredentials: true // Indispensable pour que les cookies soient envoyés et reçus
+          withCredentials: true
         });
 
         isRefreshing = false;
-        processQueue(null); // Traite la file d'attente avec succès
+        processQueue(null);
 
-        // Relance la requête originale qui a échoué avec 401
         return apiClient(originalRequest);
       } catch (refreshError) {
         isRefreshing = false;
         processQueue(refreshError); // Traite la file d'attente avec échec
 
-        // Si le rafraîchissement échoue (par exemple, session expirée côté serveur),
-        // redirigez l'utilisateur vers la page de connexion.
-        // Utilisez window.location.href pour un rechargement complet et propre.
         if (typeof window !== 'undefined') {
-          localStorage.removeItem('authToken'); // Nettoyez les tokens si vous les stockez
+          localStorage.removeItem('authToken');
           localStorage.removeItem('authUser');
           window.location.href = '/login';
         }

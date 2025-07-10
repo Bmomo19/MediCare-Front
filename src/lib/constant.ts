@@ -9,6 +9,8 @@ export const APPLINKS = {
     LOGIN: "/login"
 }
 
+export const publicPaths = ['/login', '/register', '/forgot-password'];
+
 export const BASE_ENDPOINTS = '/api';
 
 

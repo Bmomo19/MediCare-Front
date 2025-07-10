@@ -32,9 +32,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         console.log("Aucune session active ou erreur de récupération de l'utilisateur:", error);
         setUser(null);
         setIsAuthenticated(false);
-        // Supprimez uniquement les données utilisateur si vous les stockez.
-        // Le token d'authentification est dans les cookies HttpOnly, non accessible ici.
-        localStorage.removeItem('authUser');
       } finally {
         setLoading(false);
       }
@@ -77,10 +74,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const logout = useCallback(async () => {
     try {
       setLoading(true);
-      await apiClient.post(Constante.BASE_ENDPOINTS + Constante.ENDPOINTS.LOGOUT); // Endpoint de déconnexion de Laravel Sanctum
+      await apiClient.post(Constante.BASE_ENDPOINTS + Constante.ENDPOINTS.LOGOUT);
       setUser(null);
       setIsAuthenticated(false);
-      // Nettoyez les données utilisateur stockées localement
       localStorage.removeItem('authUser');
     } catch (error) {
       console.error("Erreur de déconnexion:", error);

@@ -8,7 +8,7 @@ import Image from 'next/image';
 const LoginPage: React.FC = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [rememberMe, setRememberMe] = useState<boolean>(false);
+  // const [rememberMe, setRememberMe] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const { login, loading } = useAuth();
 
@@ -16,7 +16,9 @@ const LoginPage: React.FC = () => {
     e.preventDefault();
     setError('');
 
-    const result = await login({username, password});
+    const result = await login({ username, password });
+
+    console.log(result);
 
     if (!result.success) {
       setError(result.message || "Une erreur inconnue est survenue.");
@@ -39,10 +41,10 @@ const LoginPage: React.FC = () => {
           <div className="mx-auto h-24 w-24">
             <Image src="/assets/logo.png" alt="Logo MediCare" className='w-full h-full' width={500} height={500} />
           </div>
-          <h2 className="mt-4 text-3xl font-extrabold text-gray-900">
+          <h3 className="mt-4 text-2xl font-extrabold text-gray-900">
             Bienvenue sur MediCare
-          </h2>
-          <p className="mt-2 text-sm text-gray-600">
+          </h3>
+          <p className="mt-4 text-sm text-gray-600">
             Connectez-vous pour accéder à votre espace
           </p>
         </div>
@@ -73,13 +75,13 @@ const LoginPage: React.FC = () => {
             </label>
             <div className="mt-1">
               <input name="password" type="password" autoComplete="current-password" required placeholder="Votre mot de passe" value={password} onChange={(e) => setPassword(e.target.value)}
-                className="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition duration-150 ease-in-out"/>
+                className="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition duration-150 ease-in-out" />
             </div>
           </div>
 
-          <div className="flex items-center justify-between">
+          {/* <div className="flex items-center justify-between">
             <div className="flex items-center">
-              <input name="remember-me" type="checkbox" checked={rememberMe} onChange={(e) => setRememberMe(e.target.checked)} className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"/>
+              <input name="remember-me" type="checkbox" checked={rememberMe} onChange={(e) => setRememberMe(e.target.checked)} className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" />
               <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
                 Se souvenir de moi
               </label>
@@ -90,11 +92,18 @@ const LoginPage: React.FC = () => {
                 Mot de passe oublié ?
               </a>
             </div>
-          </div>
+          </div> */}
 
           <div>
-            <button type="submit" disabled={loading}
-              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-lg font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out">
+            <button
+              type="submit"
+              disabled={loading}
+              className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-lg font-medium text-white transition duration-150 ease-in-out
+                ${loading
+                  ? 'bg-gray-400 cursor-not-allowed opacity-75' /* Styles grisés et désactivés */
+                  : 'bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500' /* Styles actifs */
+                }
+              `}>
               {loading ? 'Connexion en cours...' : 'Se connecter'}
             </button>
           </div>
