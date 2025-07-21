@@ -17,6 +17,6 @@ export const BASE_ENDPOINTS = '/api';
 export const ENDPOINTS = {
     CSRF : '/sanctum/csrf-cookie', 
     LOGIN : '/v1/auth/login',
-    LOGOUT : '/v1/auth/logout'
-
+    LOGOUT : '/v1/auth/logout',
+    USER : '/v1/auth/me'
 }

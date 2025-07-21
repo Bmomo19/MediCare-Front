@@ -1,41 +1,45 @@
-import { Role } from "@/lib/enum";
-
-// User interface
+// types/auth.ts
 export interface User {
-  id: string;
-  fullname: string;
-  email: string;
+  id: number; // Ou string si votre ID est une chaîne
+  medicalId: string;
+  fullName: string;
   username: string;
-  role: Role; // Exemple de rôles
+  role: string;
+  email: string;
+  contact: string;
+  isActif: boolean;
+  isFirstConnection: boolean;
 }
 
-// Interface pour la réponse de l'API de connexion réussie
-export interface LoginSuccessResponse {
-  success: true;
-  user: User;
-  token: string;
+// Type pour l'objet accessToken imbriqué dans la réponse de login
+export interface AccessTokenData {
+  access_token: string;
+  token_type: string;
+  expires_at: string;
+  expires_in_minutes: number;
+  role: string;
+  medicalId: string;
 }
 
-type LoginResponse = {
-  message: string;
-  user: User;
-  // token?: string; // Laravel Sanctum pour SPA ne renvoie PAS de token d'accès dans la réponse de login par défaut.
+// La réponse complète de l'API de login
+export interface LoginApiResponse {
+  user: User & { accessToken: AccessTokenData }; // L'utilisateur contient l'objet accessToken imbriqué
+  refresh_token?: string; // Optionnel: si votre API renvoie un refresh_token distinct
 }
 
-// Interface pour la réponse de l'API de connexion échouée
-export interface LoginFailureResponse {
-  success: false;
-  message: string;
+// Le type de réponse que notre fonction login renverra
+export interface LoginResult {
+  success: boolean;
+  message?: string;
 }
 
-// Type union pour toutes les réponses de connexion possibles
-export type LoginApiResponse = LoginSuccessResponse | LoginFailureResponse;
-
-
-interface AuthContextType {
+// Le type du contexte d'authentification
+export interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   loading: boolean;
-  login: (credentials: { username: string; password: string }) => Promise<{ success: boolean; message?: string }>;
+  accessToken: string | null;
+  refreshToken: string | null;
+  login: (credentials: { username: string; password: string }) => Promise<LoginResult>;
   logout: () => Promise<void>;
 }
