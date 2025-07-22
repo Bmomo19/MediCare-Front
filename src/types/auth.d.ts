@@ -17,14 +17,13 @@ export interface AccessTokenData {
   token_type: string;
   expires_at: string;
   expires_in_minutes: number;
-  role: string;
-  medicalId: string;
 }
 
 // La réponse complète de l'API de login
 export interface LoginApiResponse {
   user: User & { accessToken: AccessTokenData }; // L'utilisateur contient l'objet accessToken imbriqué
-  refresh_token?: string; // Optionnel: si votre API renvoie un refresh_token distinct
+  success: boolean;
+  message?: string;
 }
 
 // Le type de réponse que notre fonction login renverra
@@ -42,4 +41,16 @@ export interface AuthContextType {
   refreshToken: string | null;
   login: (credentials: { username: string; password: string }) => Promise<LoginResult>;
   logout: () => Promise<void>;
+}
+
+export interface UserSession {
+  user: User;
+  session_info: TokenSession;  
+}
+
+export interface TokenSession {
+  token_refreshed: boolean;
+  new_token: string;
+  expires_at: string;
+  session_type: string;
 }

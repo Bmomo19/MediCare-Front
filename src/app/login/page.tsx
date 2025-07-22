@@ -18,8 +18,6 @@ const LoginPage: React.FC = () => {
 
     const result = await login({ username, password });
 
-    console.log(result);
-
     if (!result.success) {
       setError(result.message || "Une erreur inconnue est survenue.");
     }
