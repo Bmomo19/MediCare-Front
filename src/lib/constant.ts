@@ -1,3 +1,9 @@
+import { User } from "@/types/auth";
+
+const localUser : string | null = typeof window !== 'undefined' ? localStorage.getItem('authUser') : null;
+export const user : User | null = localUser ? JSON.parse(localUser) : null;
+
+
 export const APPLINKS = {
     DASHBOARD: "/dashboard",
     DASHBOARD_ADMIN: "/dashboard/admin",
@@ -10,7 +16,6 @@ export const APPLINKS = {
 }
 
 export const publicPaths = ['/login', '/register', '/forgot-password'];
-
 
 export const ENDPOINTS = {
     LOGIN : '/auth/login',

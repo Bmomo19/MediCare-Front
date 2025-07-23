@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// contexts/AuthContext.tsx
 'use client';
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import apiClient from '@/services/apiClient'; // Importez votre client API configuré
 import axios from 'axios'; // Importez axios pour vérifier les erreurs Axios
-import { User, LoginApiResponse, AuthContextType, UserSession } from '@/types/auth'; // Importez vos types
+import { User, LoginApiResponse, AuthContextType } from '@/types/auth'; // Importez vos types
 import * as Constante from '@/lib/constant'; // Importez vos constantes
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -17,86 +16,10 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
-  const [refreshToken, setRefreshToken] = useState<string | null>(null); // Maintenu pour le type, mais non utilisé pour refresh explicite
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
 
   const router = useRouter();
-
-  // Fonction pour charger les tokens et l'utilisateur depuis localStorage
-  const loadAuthData = useCallback(() => {
-    const storedAccessToken = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
-    const storedUser = typeof window !== 'undefined' ? localStorage.getItem('authUser') : null;
-
-    if (storedAccessToken && storedUser) { // Le refresh token n'est pas obligatoire pour l'initialisation ici
-      try {
-        const parsedUser: User = JSON.parse(storedUser);
-        setUser(parsedUser);
-        setAccessToken(storedAccessToken);
-        setIsAuthenticated(true);
-        apiClient.defaults.headers.common['Authorization'] = `Bearer ${storedAccessToken}`;
-      } catch (error) {
-        console.error("Erreur lors du parsing des données utilisateur stockées :", error);
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
-        localStorage.removeItem('authUser');
-        setUser(null);
-        setAccessToken(null);
-        setRefreshToken(null);
-        setIsAuthenticated(false);
-      }
-    } else {
-      setUser(null);
-      setAccessToken(null);
-      setRefreshToken(null);
-      setIsAuthenticated(false);
-      delete apiClient.defaults.headers.common['Authorization']; // Supprimer le header si pas de token
-    }
-    setLoading(false);
-  }, []);
-
-  useEffect(() => {
-    loadAuthData(); // Charger les données d'auth au montage
-  }, [loadAuthData]);
-
-  
-  const checkAuthStatus = useCallback(async () => {
-    setLoading(true);
-    try {
-      // Tente de récupérer l'utilisateur authentifié.
-      const response = await apiClient.get<UserSession>(Constante.ENDPOINTS.USER);
-
-      setUser(response.data.user);
-      setAccessToken(response.data.session_info.new_token);
-      localStorage.setItem('accessToken', response.data.session_info.new_token);
-      // Mettre à jour le header Authorization par défaut pour apiClient
-      apiClient.defaults.headers.common['Authorization'] = `Bearer ${response.data.session_info.new_token}`;
-
-      setIsAuthenticated(true);
-    } catch (error) {
-      console.log("Aucune session active ou erreur de récupération de l'utilisateur:", error);
-      setUser(null);
-      setAccessToken(null);
-      setRefreshToken(null);
-      setIsAuthenticated(false);
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('authUser');
-      delete apiClient.defaults.headers.common['Authorization'];
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-
-  useEffect(() => {
-    if (!user) {
-    checkAuthStatus();
-  } else {
-    setLoading(false);
-  }
-  }, [checkAuthStatus, user]);
-
 
   const login = useCallback(async (credentials: { username: string; password: string }) => {
     try {
@@ -110,21 +33,20 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         const loggedInUser = response.data.user;
         const access_token = loggedInUser.accessToken.access_token;
 
+        localStorage.setItem('loginDate', new Date().toISOString().split('T')[0]);
+
         setUser(loggedInUser);
         setAccessToken(access_token);
         setIsAuthenticated(true);
 
-        // Stockage dans localStorage
         if (typeof window !== 'undefined') {
           localStorage.setItem('accessToken', access_token);
-          
-          // Stocke l'objet user sans l'objet accessToken imbriqué pour la simplicité
+
           const userToStore = { ...loggedInUser };
-          delete (userToStore as any).accessToken; // Supprime la propriété accessToken avant de stocker
+          delete (userToStore as any).accessToken;
           localStorage.setItem('authUser', JSON.stringify(userToStore));
         }
 
-        // Mettre à jour le header Authorization par défaut pour apiClient
         apiClient.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
 
         router.push('/dashboard');
@@ -134,9 +56,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
     } catch (error: any) {
       console.error("Erreur de connexion:", error.response?.data?.message || error.message);
-      return { 
-        success: false, 
-        message: error.response?.data?.message || "Une erreur est survenue lors de la connexion." 
+      return {
+        success: false,
+        message: error.response?.data?.message || "Une erreur est survenue lors de la connexion."
       };
     } finally {
       setLoading(false);
@@ -156,7 +78,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     } finally {
       setUser(null);
       setAccessToken(null);
-      setRefreshToken(null);
       setIsAuthenticated(false);
       delete apiClient.defaults.headers.common['Authorization'];
 
@@ -170,12 +91,55 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   }, [router]);
 
+  // Fonction pour charger les tokens et l'utilisateur depuis localStorage
+  const loadAuthData = useCallback(async () => {
+    const today = new Date().toISOString().split('T')[0];
+    const storedAccessToken = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
+    const storedUser = typeof window !== 'undefined' ? localStorage.getItem('authUser') : null;
+    const storedLoginDate = typeof window !== 'undefined' ? localStorage.getItem('loginDate') : null;
+
+    if (storedLoginDate && storedLoginDate !== today) {
+      console.log("Connexion expirée : nouveau jour détecté");
+      await logout();
+      return;
+    }
+
+    if (storedAccessToken && storedUser) {
+      try {
+        const parsedUser: User = JSON.parse(storedUser);
+        setUser(parsedUser);
+        setAccessToken(storedAccessToken);
+        setIsAuthenticated(true);
+        apiClient.defaults.headers.common['Authorization'] = `Bearer ${storedAccessToken}`;
+      } catch (error) {
+        console.error("Erreur lors du parsing des données utilisateur stockées :", error);
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('authUser');
+        setUser(null);
+        setAccessToken(null);
+        setIsAuthenticated(false);
+        await logout();
+      }
+    } else {
+      setUser(null);
+      setAccessToken(null);
+      setIsAuthenticated(false);
+      delete apiClient.defaults.headers.common['Authorization'];
+      await logout();
+    }
+    setLoading(false);
+  }, [logout]);
+
+  useEffect(() => {
+    loadAuthData();
+  }, [loadAuthData]);
+
   const authContextValue: AuthContextType = {
     user,
     isAuthenticated,
     loading,
     accessToken,
-    refreshToken,
     login,
     logout,
   };

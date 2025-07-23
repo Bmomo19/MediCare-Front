@@ -8,10 +8,10 @@ const apiClient = axios.create({
   },
 });
 
-// Intercepteur de requêtes: Ajoute le token d'accès
+// Intercepteur de requêtes
 apiClient.interceptors.request.use(
   async (config) => {
-    // Récupère le access token depuis localStorage
+
     const accessToken = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
 
     if (accessToken) {
@@ -25,7 +25,7 @@ apiClient.interceptors.request.use(
   }
 );
 
-// Intercepteur de réponses: Gère les erreurs 401 et mise à jour du token si reçu
+// Intercepteur de réponses
 apiClient.interceptors.response.use(
   (response) => {
     // Vérifie si un nouveau token est présent dans la réponse
@@ -34,12 +34,11 @@ apiClient.interceptors.response.use(
     if (sessionInfo?.token_refreshed && sessionInfo?.new_token) {
       const newToken = sessionInfo.new_token;
 
-      // Met à jour le token dans localStorage
       if (typeof window !== 'undefined') {
         localStorage.setItem('accessToken', newToken);
       }
 
-      // Met à jour le header global Authorization pour les prochaines requêtes
+      // Met à jour le token dans les headers
       apiClient.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
     }
 
@@ -51,12 +50,11 @@ apiClient.interceptors.response.use(
 
     // Si l'erreur est 401 (token expiré/invalide) et que la requête n'a pas déjà été retryée
     if (statusCode === 401 && !originalRequest._retry) {
-      originalRequest._retry = true; // Marque la requête comme étant retryée
+      originalRequest._retry = true;
 
       if (typeof window !== 'undefined') {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('authUser');
-        // window.location.href = '/login'; // Redirection si nécessaire
       }
 
       return Promise.reject(error);
@@ -65,6 +63,5 @@ apiClient.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
 
 export default apiClient;

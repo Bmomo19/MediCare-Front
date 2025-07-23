@@ -14,7 +14,7 @@ export function formatMessageTime(timestamp: string) {
       return diffInMinutes === 0 ? "just now" : `${diffInMinutes}m`;
     }
     // Otherwise show time like "4:39 PM"
-    return messageDate.toLocaleTimeString("en-US", {
+    return messageDate.toLocaleTimeString("fr-FR", {
       hour: "numeric",
       minute: "2-digit",
       hour12: true,
@@ -23,19 +23,19 @@ export function formatMessageTime(timestamp: string) {
 
   // For messages from this week, show day name
   if (diffInDays < 7) {
-    return messageDate.toLocaleDateString("en-US", { weekday: "long" });
+    return messageDate.toLocaleDateString("fr-FR", { weekday: "long" });
   }
 
   // For messages from this year, show date
   if (messageDate.getFullYear() === now.getFullYear()) {
-    return messageDate.toLocaleDateString("en-US", {
+    return messageDate.toLocaleDateString("fr-FR", {
       day: "numeric",
       month: "short",
     });
   }
 
   // For older messages, show date with year
-  return messageDate.toLocaleDateString("en-US", {
+  return messageDate.toLocaleDateString("fr-FR", {
     day: "numeric",
     month: "short",
     year: "numeric",

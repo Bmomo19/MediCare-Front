@@ -8,6 +8,7 @@ import SidebarDropdown from './SidebarDropdown';
 import { useSidebarContext } from '@/contexts/SidebarContext';
 import { NAV_DATA, NavGroup } from './menu/data';
 import { CloseIcon } from './menu/icons.menu';
+import { user } from '@/lib/constant';
 
 const Sidebar: React.FC = () => {
   const { isOpen, isMobile, toggleSidebar } = useSidebarContext();
@@ -56,11 +57,8 @@ const Sidebar: React.FC = () => {
                 return (
                   <SidebarDropdown key={menuItem.title} title={menuItem.title} icon={IconComponent} defaultOpen={menuItem.defaultOpen} hasActiveChild={activeChild}>
                     {menuItem.items.map((item) => (
-                      <Link key={item.title} href={item.url}
-                        className={`group flex items-center px-4 py-2 text-sm rounded-md transition-colors duration-200
-                          ${isActive(item.url) ? 'bg-indigo-400 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}
-                        `}
-                      >
+                      <Link key={item.title} href={item.url} className={`group flex items-center px-4 py-2 text-sm rounded-md transition-colors duration-200
+                          ${isActive(item.url) ? 'bg-indigo-400 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}>
                         {item.title}
                       </Link>
                     ))}
@@ -70,11 +68,8 @@ const Sidebar: React.FC = () => {
                 const IconComponent = menuItem.icon;
 
                 return (
-                  <Link key={menuItem.title} href={menuItem.url || ''}
-                    className={`flex items-center px-4 py-2.5 text-sm font-medium rounded-lg transition-colors duration-200
-                      ${isActive(menuItem?.url) ? 'bg-indigo-600 text-indigo-100' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}
-                    `}
-                  >
+                  <Link key={menuItem.title} href={menuItem.url || ''} className={`flex items-center px-4 py-2.5 text-sm font-medium rounded-lg transition-colors duration-200
+                      ${isActive(menuItem?.url) ? 'bg-indigo-600 text-indigo-100' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}>
                     {IconComponent && <IconComponent className="h-5 w-5 mr-3" />}
                     {menuItem.title}
                   </Link>
@@ -86,9 +81,9 @@ const Sidebar: React.FC = () => {
 
         <div className="mt-auto p-4 border-t border-gray-800">
           <div className="flex items-center">
-            <Image width={32} height={32} className="h-8 w-8 rounded-full object-cover border-2 border-indigo-500" src="/images/user/user-01.png" alt="User profile"/>
+            <Image width={32} height={32} className="h-8 w-8 rounded-full object-cover border-2 border-indigo-500" src="/images/user/user-01.png" alt="User profile" />
             <div className="ml-3">
-              <p className="text-sm font-medium text-white">Tom Cook</p>
+              <p className="text-sm font-medium text-white">{user?.fullName}</p>
               <Link href="/profile" className="text-xs text-indigo-300 hover:underline">
                 Voir le profil
               </Link>

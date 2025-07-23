@@ -1,6 +1,5 @@
-// types/auth.ts
 export interface User {
-  id: number; // Ou string si votre ID est une chaîne
+  id: number;
   medicalId: string;
   fullName: string;
   username: string;
@@ -9,6 +8,7 @@ export interface User {
   contact: string;
   isActif: boolean;
   isFirstConnection: boolean;
+  lastLoginAt: Date;
 }
 
 // Type pour l'objet accessToken imbriqué dans la réponse de login
@@ -21,7 +21,7 @@ export interface AccessTokenData {
 
 // La réponse complète de l'API de login
 export interface LoginApiResponse {
-  user: User & { accessToken: AccessTokenData }; // L'utilisateur contient l'objet accessToken imbriqué
+  user: User & { accessToken: AccessTokenData };
   success: boolean;
   message?: string;
 }
@@ -38,7 +38,6 @@ export interface AuthContextType {
   isAuthenticated: boolean;
   loading: boolean;
   accessToken: string | null;
-  refreshToken: string | null;
   login: (credentials: { username: string; password: string }) => Promise<LoginResult>;
   logout: () => Promise<void>;
 }

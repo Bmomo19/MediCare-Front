@@ -36,7 +36,6 @@ const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
   }, [isAuthenticated, loading, pathname, router, user?.role]);
 
   // Affichez un état de chargement pendant que le statut d'authentification est déterminé.
-  // Ceci assure une cohérence entre le rendu serveur et client.
   
   // if (loading) {
   //   return (
