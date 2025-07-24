@@ -137,7 +137,7 @@ function PatientPage({ }: Props) {
       <div className="flex flex-wrap justify-between m-2 mb-2">
         {/* <span className="text-xl text-bold text-black inline-flex"></span> */}
         <span className="text-2xl font-extrabold">Patients</span>
-        <Button onClick={() => { }}>
+        <Button className="bg-indigo-600 hover:bg-indigo-800" onClick={() => { }}>
           Ajouter Patient {" "}
           <LocalHospitalIcon fontSize="small" />
         </Button>
