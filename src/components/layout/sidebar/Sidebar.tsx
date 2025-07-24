@@ -7,8 +7,8 @@ import { usePathname } from 'next/navigation';
 import SidebarDropdown from './SidebarDropdown';
 import { useSidebarContext } from '@/contexts/SidebarContext';
 import { NAV_DATA, NavGroup } from './menu/data';
-import { CloseIcon } from './menu/icons.menu';
 import { user } from '@/lib/constant';
+import { CloseIcon } from '@/components/Icon';
 
 const Sidebar: React.FC = () => {
   const { isOpen, isMobile, toggleSidebar } = useSidebarContext();

@@ -5,6 +5,7 @@ export interface Patient {
     medicalId: string,
     firstname: string,
     lastname: string,
+    fullname: string,
     gender: Gender,
     birthdate: ?string,
     maritalStatus: MaritalStatus,

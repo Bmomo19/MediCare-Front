@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import Image from 'next/image';
+import { Cadenas, UserIcon } from '@/components/Icon';
 
 
 const LoginPage: React.FC = () => {
@@ -59,11 +60,13 @@ const LoginPage: React.FC = () => {
             <label htmlFor="identifier" className="block text-sm font-medium text-gray-700">
               Identifiant / Email
             </label>
-            <div className="mt-1">
-              <input name="identifier" type="text" value={username} autoComplete="username" required placeholder="Votre identifiant ou email"
-                className="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition duration-150 ease-in-out"
-                onChange={(e) => setUsername(e.target.value)}
+            <div className="mt-1 relative">
+              <input name="identifier" type="text" value={username} autoComplete="username" required placeholder="Votre identifiant ou email" onChange={(e) => setUsername(e.target.value)}
+                className="appearance-none block w-full px-4 py-3 pr-10 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition duration-150 ease-in-out"
               />
+              <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                <UserIcon className="h-5 w-5 text-gray-400" />
+              </div>
             </div>
           </div>
 
@@ -71,9 +74,12 @@ const LoginPage: React.FC = () => {
             <label htmlFor="password" className="block text-sm font-medium text-gray-700">
               Mot de passe
             </label>
-            <div className="mt-1">
+            <div className="mt-1 relative">
               <input name="password" type="password" autoComplete="current-password" required placeholder="Votre mot de passe" value={password} onChange={(e) => setPassword(e.target.value)}
                 className="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition duration-150 ease-in-out" />
+                <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                <Cadenas className="h-5 w-5 text-black" />
+              </div>
             </div>
           </div>
 
@@ -114,7 +120,6 @@ const LoginPage: React.FC = () => {
         </p>
       </div>
     </div>
-    // </>
   );
 };
 

@@ -99,7 +99,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const storedLoginDate = typeof window !== 'undefined' ? localStorage.getItem('loginDate') : null;
 
     if (storedLoginDate && storedLoginDate !== today) {
-      console.log("Connexion expirée : nouveau jour détecté");
       await logout();
       return;
     }

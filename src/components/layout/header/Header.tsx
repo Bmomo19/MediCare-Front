@@ -2,20 +2,20 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { useAuth } from '@/contexts/AuthContext'; // Assurez-vous que le chemin est correct
-import { useSidebarContext } from '@/contexts/SidebarContext'; // Importe le contexte de la sidebar
-import { MenuIcon, ProfileIcon, LogoutIcon } from '../sidebar/menu/icons.menu'; // Importe les icônes
+import { useAuth } from '@/contexts/AuthContext';
+import { useSidebarContext } from '@/contexts/SidebarContext';
+import { LogoutIcon, MenuIcon, ProfileIcon } from '@/components/Icon';
 
 const Header: React.FC = () => {
   const { logout } = useAuth();
-  const { toggleSidebar, isMobile } = useSidebarContext(); // Utilise le contexte de la sidebar
+  const { toggleSidebar, isMobile } = useSidebarContext();
 
   const handleLogout = async () => {
     await logout();
   };
 
   return (
-    <header className="bg-white shadow-md p-4 flex justify-between items-center z-30 relative md:static rounded-b-lg">
+    <header className="bg-white shadow-md p-2 flex justify-between items-center z-30 relative md:static rounded-b-lg">
       <div className="flex items-center">
         {isMobile && (
           <button

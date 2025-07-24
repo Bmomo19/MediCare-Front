@@ -1,4 +1,4 @@
-import * as Icons from "./icons.menu"; 
+import * as Icons from "@/components/Icon"; 
 import * as URL from "@/lib/constant"; 
 
 

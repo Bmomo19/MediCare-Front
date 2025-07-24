@@ -1,7 +1,7 @@
 'use client';
 
+import { ChevronDownIcon, IconProps } from '@/components/Icon';
 import React, { useState, ReactNode, useEffect } from 'react';
-import { ChevronDownIcon, IconProps } from './menu/icons.menu';
 
 interface SidebarDropdownProps {
   title: string;
