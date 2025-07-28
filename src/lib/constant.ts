@@ -1,9 +1,3 @@
-import { User } from "@/types/auth";
-
-const localUser : string | null = typeof window !== 'undefined' ? localStorage.getItem('authUser') : null;
-export const user : User | null = localUser ? JSON.parse(localUser) : null;
-
-
 export const APPLINKS = {
     DASHBOARD: "/dashboard",
     DASHBOARD_ADMIN: "/dashboard/admin",

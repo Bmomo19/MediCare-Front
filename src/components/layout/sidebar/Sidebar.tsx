@@ -7,12 +7,15 @@ import { usePathname } from 'next/navigation';
 import SidebarDropdown from './SidebarDropdown';
 import { useSidebarContext } from '@/contexts/SidebarContext';
 import { NAV_DATA, NavGroup } from './menu/data';
-import { user } from '@/lib/constant';
 import { CloseIcon } from '@/components/Icon';
+import { User } from "@/types/auth";
 
 const Sidebar: React.FC = () => {
   const { isOpen, isMobile, toggleSidebar } = useSidebarContext();
   const pathname = usePathname();
+
+  const localUser: string | null = typeof window !== 'undefined' ? localStorage.getItem('authUser') : null;
+  const user: User | null = localUser ? JSON.parse(localUser) : null;
 
   const isActive = (url?: string) => pathname === url;
 
