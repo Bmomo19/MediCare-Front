@@ -7,7 +7,8 @@ import type { TableProps } from 'antd';
 import { Table } from 'antd';
 import { ColumnsType, TableRowSelection } from 'antd/es/table/interface';
 import { Patient } from "@/types/patient";
-import { fakePatients } from "@/lib/utils";
+import { getAllPatients } from "@/services/PatientService";
+import toast from 'react-hot-toast';
 
 type Props = {
   children?: React.ReactNode
@@ -22,7 +23,7 @@ function PatientPage({ }: Props) {
     type: 'radio',
     selectedRowKeys: [],
     onChange: (selectedRowKeys, selectedRows) => {
-      console.log(selectedRowKeys, selectedRows);
+      console.log('selectedRowKeys changed: ', selectedRowKeys, selectedRows);
     }
   }
 
@@ -33,14 +34,12 @@ function PatientPage({ }: Props) {
       key: 'fullname',
     },
     {
-      title: "Matricule",
-      dataIndex: 'medicalId',
-      key: 'medicalId',
-    },
-    {
       title: "Date de Naissance",
       dataIndex: 'birthdate',
       key: 'birthdate',
+      render: (date: string) => {
+        return new Date(date).toLocaleDateString();
+      }
     },
     {
       title: "Contact",
@@ -68,19 +67,16 @@ function PatientPage({ }: Props) {
 
   const pagination: TableProps<Patient>['pagination'] = {
     position: ['none', 'bottomRight'],
-    defaultPageSize: 5,
-    pageSizeOptions: [5, 10, 20, 50, 100],
+    defaultPageSize: 10,
+    pageSizeOptions: [20, 50, 100],
     showSizeChanger: true,
-    total: 10,
+    total: allPatient?.length,
     showQuickJumper: true,
-    showTotal: (total) => `Total ${total} reclamation(s)`,
-    onChange: () => {
-
-    }
+    showTotal: (total) => `Total ${total} patient(s)`
   }
 
 
-  
+
   //   expandedRowRender,
   //   footer,
   //   rowSelection: {},
@@ -88,6 +84,7 @@ function PatientPage({ }: Props) {
   //   tableLayout: undefined,
 
   const tableProps: TableProps<Patient> = {
+    tableLayout: "fixed",
     loading: loadData,
     bordered: true,
     size: 'middle',
@@ -113,12 +110,12 @@ function PatientPage({ }: Props) {
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
             />
-             <SearchInput
+            {/* <SearchInput
               type="text"
               placeholder="Rechercher..."
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
-            />
+            /> */}
           </div>
         </div>
       </>
@@ -126,11 +123,16 @@ function PatientPage({ }: Props) {
   };
 
   useEffect(() => {
-    setTimeout(() => {
+    setLoadData(true);
+    getAllPatients().then((res) => {
+      setAllPatient(res.data.data);
+    }).catch((err) => {
+      console.log(err.message);
+      toast.error(err.message);
+    }).finally(() => {
       setLoadData(false);
-      setAllPatient(fakePatients);
-    }, 3000);
-  }, [allPatient])
+    })
+  }, []);
 
   return (
     <div className="h-full shadow-lg border-0 p-2 m-2 bg-white">
@@ -144,7 +146,7 @@ function PatientPage({ }: Props) {
       </div>
       {/* Divider */}
       <hr className="md:min-w-full border-indigo-600 py-2 m-2" />
-      <div className="flex flex-col m-2 mb-5 overflow-y-auto">
+      <div className="flex flex-col m-2 mb-5">
         <Table {...tableProps} rowKey={(record) => record.patientId} />
       </div>
     </div>

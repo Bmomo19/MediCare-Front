@@ -14,5 +14,8 @@ export const publicPaths = ['/login', '/register', '/forgot-password'];
 export const ENDPOINTS = {
     LOGIN : '/auth/login',
     LOGOUT : '/auth/logout',
-    USER : '/auth/me'
+    USER : '/auth/me',
+
+    // PATIENTS
+    PATIENT: '/patients',
 }

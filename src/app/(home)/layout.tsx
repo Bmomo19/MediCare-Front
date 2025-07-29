@@ -11,7 +11,7 @@ export default function HomeGroupLayout({children,}: Readonly<{children: React.R
   return (
     <div className="flex flex-col h-screen">
       <Header />
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-y-auto">
         <Sidebar/>
         <main className='flex-1 w-full md:ml-72 md:m-8'>
           {children} 

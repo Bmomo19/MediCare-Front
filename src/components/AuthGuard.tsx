@@ -3,7 +3,7 @@
 import { useEffect, ReactNode } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '../contexts/AuthContext';
-import { publicPaths } from '@/lib/constant';
+import { APPLINKS, publicPaths } from '@/lib/constant';
 import { Role } from '@/lib/enum';
 
 interface AuthGuardProps {
@@ -26,11 +26,11 @@ const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
 
     if (isAuthenticated && publicPaths.includes(pathname)) {
       if (user?.role === Role.ADMIN || user?.role === Role.SUPER_ADMIN) {
-        return router.push('/dashboard/admin');
+        return router.push(APPLINKS.DASHBOARD_ADMIN);
       } else if (user?.role === Role.DOCTOR) {
-        return router.push('/dashboard/doctor');
+        return router.push(APPLINKS.DASHBOARD_DOCTOR);
       } else if (user?.role === Role.PATIENT) {
-        return router.push('/dashboard/patient');
+        return router.push(APPLINKS.DAHSBOARD_PATIENT);
       }
     } 
   }, [isAuthenticated, loading, pathname, router, user?.role]);
