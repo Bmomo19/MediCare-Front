@@ -32,6 +32,14 @@ function PatientPage({ }: Props) {
       title: "Nom et Prénom",
       dataIndex: 'fullname',
       key: 'fullname',
+      filteredValue : [searchText],
+      onFilter: (value, record) => {
+        return String(record.fullname).toLowerCase().includes(value.toString().toLowerCase()) ||
+          String(record.contact).toLowerCase().includes(value.toString().toLowerCase()) ||
+          String(record.email).toLowerCase().includes(value.toString().toLowerCase()) ||
+          String(record.address).toLowerCase().includes(value.toString().toLowerCase()) ||
+          String(record.city).toLowerCase().includes(value.toString().toLowerCase());
+      }
     },
     {
       title: "Date de Naissance",

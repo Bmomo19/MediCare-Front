@@ -3,8 +3,6 @@ import { Gender, MaritalStatus } from "@/lib/enum";
 export interface Patient {
     patientId: number,
     medicalId: string,
-    firstname: string,
-    lastname: string,
     fullname: string,
     gender: Gender,
     birthdate: ?string,
